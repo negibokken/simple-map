@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Script from 'next/script'
 import { Inter } from '@next/font/google'
 import styles from '../styles/Home.module.css'
+import cookie from 'cookie';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -12,13 +13,12 @@ export const getServerSideProps = ({ req, res }) => {
     console.log("env", env);
     const partitioned = true;
     let y = 1, x = 1;
-    if (!req.headers.cookie) {
+    const cookies = cookie.parse(req.headers.cookie)
+    if (cookies.location) {
         res.setHeader("Set-Cookie", `location=1:1; SameSite=None; Secure; HttpOnly; Path=/; ${partitioned ? "Partitioned;" : ""}`)
     } else {
-        console.log(`req.cookie: ${req.headers.cookie}`)
-        const params = req.headers.cookie.replace(" ", "").split(";");
-        const locationParam = params.find((param) => param.startsWith("location="))
-        let [rawy, rawx] = locationParam.split("=")[1].split(":");
+        const locationParam = cookies.location;
+        let [rawy, rawx] = locationParam.split(":");
         y = parseInt(rawy, 10), x = parseInt(rawx, 10);
         switch (url.searchParams.get("op")) {
             case "up": {
