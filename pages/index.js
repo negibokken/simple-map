@@ -11,6 +11,8 @@ const env = process.env.NODE_ENV;
 
 export const getServerSideProps = ({ req, res }) => {
     console.log("env", env);
+    console.log("req.url", req.url);
+    console.log("req.url", req.headers.host);
     const partitioned = true;
     let y = 1, x = 1;
     const cookies = cookie.parse(req.headers.cookie)
