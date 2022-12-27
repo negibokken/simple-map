@@ -20,12 +20,14 @@ export const getServerSideProps = ({ req, res }) => {
     } else {
 
         const cookies = cookie.parse(req.headers.cookie);
-        const url = new URL('https' + req.headers.host + req.url);
-        console.log(url.searchParams);
+        // const url = new URL('https' + req.headers.host + req.url);
+        // console.log(url.searchParams);
         const locationParam = cookies.location;
         let [rawy, rawx] = locationParam.split(":");
         y = parseInt(rawy, 10), x = parseInt(rawx, 10);
-        switch (url.searchParams.get("op")) {
+        // switch (url.searchParams.get("op")) {
+        const down = "down";
+        switch (down) {
             case "up": {
                 if (y > 1) y -= 1;
                 break;
