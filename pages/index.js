@@ -88,7 +88,7 @@ export default function Home({ x, y }) {
                         <button name="op" type="submit" value="right">→</button>
                         <button name="op" type="submit" value="down">↓</button>
 
-                        <Script defer dangerouslySetInnerHTML={
+                        <Script id="fetch-location" defer dangerouslySetInnerHTML={
                             {
                                 __html: `
                                     fetch("/api/location").then((res) => {
