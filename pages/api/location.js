@@ -3,14 +3,13 @@
 import cookie from 'cookie';
 
 export default function handler(req, res) {
-    const parsedCookie = cookie.parse(req.headers.cookie);
 
-    console.log(!parsedCookie || !parsedCookie.location);
-    if (!parsedCookie || !parsedCookie.location) {
+    if (!req.headers.cookie) {
         return res.end(JSON.stringify(
             { location: { x: 1, y: 1 } }
         ));
     }
+    const parsedCookie = cookie.parse(req.headers.cookie);
     console.log("parsedCookie: ", parsedCookie);
     console.log("location: ", parsedCookie.location)
 

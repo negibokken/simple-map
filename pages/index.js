@@ -15,11 +15,13 @@ export const getServerSideProps = ({ req, res }) => {
     console.log("req.url", req.headers.host);
     const partitioned = true;
     let y = 1, x = 1;
-    const cookies = cookie.parse(req.headers.cookie)
-    if (!cookies.location) {
-        res.setHeader("Set-Cookie", `location=1:1; SameSite=None; Secure; HttpOnly; Path=/; ${partitioned ? "Partitioned;" : ""}`)
+    if (!req.headers.cookie) {
+        res.setHeader("Set-Cookie", `location=1:1; ${env === 'development' ? "" : "SameSite=None; Secure; "}HttpOnly; Path=/; ${partitioned && env === 'production' ? "Partitioned;" : ""}`)
     } else {
+
+        const cookies = cookie.parse(req.headers.cookie);
         const url = new URL('https' + req.headers.host + req.url);
+        console.log(url.searchParams);
         const locationParam = cookies.location;
         let [rawy, rawx] = locationParam.split(":");
         y = parseInt(rawy, 10), x = parseInt(rawx, 10);
@@ -43,7 +45,7 @@ export const getServerSideProps = ({ req, res }) => {
             default: {
             }
         }
-        res.setHeader("Set-Cookie", `location=${y}:${x}; SameSite=None; Secure; HttpOnly; Path=/; ${partitioned ? "Partitioned;" : ""}`);
+        res.setHeader("Set-Cookie", `location=${y}:${x}; ${env === 'development' ? "" : "SameSite=None; Secure; "}HttpOnly; Path=/; ${partitioned && env === "production" ? "Partitioned;" : ""}`);
     }
     return { props: { x, y } }
 }
