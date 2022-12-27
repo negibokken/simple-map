@@ -10,6 +10,8 @@ export default function handler(req, res) {
             { location: { x: 1, y: 1 } }
         ));
     }
+    console.log("parsedCookie: ", parsedCookie);
+    console.log("location: ", parsedCookie.location)
     const params = parsedCookie.location.split(";");
     const locationParam = params.find((param) => param.startsWith("location="))
     let [rawy, rawx] = locationParam.split("=")[1].split(":");
