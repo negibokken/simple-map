@@ -15,7 +15,7 @@ export default function handler(req, res) {
     console.log("location: ", parsedCookie.location)
 
     const locationParam = parsedCookie.location;
-    let [rawy, rawx] = locationParam.split("=")[1].split(":");
+    let [rawy, rawx] = locationParam.split(":");
     let y = parseInt(rawy), x = parseInt(rawx);
     res.status(200).json({ location: { x, y } })
 }
