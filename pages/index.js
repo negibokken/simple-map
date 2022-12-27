@@ -14,9 +14,10 @@ export const getServerSideProps = ({ req, res }) => {
     const partitioned = true;
     let y = 1, x = 1;
     const cookies = cookie.parse(req.headers.cookie)
-    if (cookies.location) {
+    if (!cookies.location) {
         res.setHeader("Set-Cookie", `location=1:1; SameSite=None; Secure; HttpOnly; Path=/; ${partitioned ? "Partitioned;" : ""}`)
     } else {
+        const url = new URL('https' + req.headers.host + req.url);
         const locationParam = cookies.location;
         let [rawy, rawx] = locationParam.split(":");
         y = parseInt(rawy, 10), x = parseInt(rawx, 10);
