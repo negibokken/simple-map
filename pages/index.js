@@ -46,10 +46,10 @@ export const getServerSideProps = ({ req, res }) => {
         }
         res.setHeader("Set-Cookie", `location=${y}:${x}; ${env === 'development' ? "" : "SameSite=None; Secure; "}HttpOnly; Path=/; ${partitioned && env === "production" ? "Partitioned;" : ""}`);
     }
-    return { props: { x, y, headers: req.headers, url: req.url } }
+    return { props: { x, y } }
 }
 
-export default function Home({ x, y, headers, url, op }) {
+export default function Home({ x, y }) {
     console.log(x, y)
     return (
         <>
@@ -86,10 +86,6 @@ export default function Home({ x, y, headers, url, op }) {
             <main className={styles.main}>
                 <div>
                     <h1>Simple Map App</h1>
-                    <div>{url}</div>
-                    <div>{JSON.stringify(headers)}</div>
-                    <div>{headers.proto + headers.host + url}</div>
-                    <div>{op}</div>
                     <form method="GET" action="/">
                         <button name="op" type="submit" value="up">↑</button>
                         <button name="op" type="submit" value="left">←</button>
@@ -112,12 +108,6 @@ export default function Home({ x, y, headers, url, op }) {
                         }>
 
                         </Script>
-                        <Script id="test" defer dangerouslySetInnerHTML={{
-                            __html: `
-                                const url = new URL(${'https://' + headers.host + url});
-                            `
-                        }}></Script>
-
 
                         <table>
                             <tbody>
