@@ -18,41 +18,38 @@ export const getServerSideProps = ({ req, res }) => {
     if (!req.headers.cookie) {
         res.setHeader("Set-Cookie", `location=1:1; ${env === 'development' ? "" : "SameSite=None; Secure; "}HttpOnly; Path=/; ${partitioned && env === 'production' ? "Partitioned;" : ""}`)
     } else {
-
         const cookies = cookie.parse(req.headers.cookie);
         // const url = new URL('https' + req.headers.host + req.url);
-        // console.log(url.searchParams);
-        const locationParam = cookies.location;
-        let [rawy, rawx] = locationParam.split(":");
-        y = parseInt(rawy, 10), x = parseInt(rawx, 10);
+        // console.log("params: ", url.searchParams);
+        // const locationParam = cookies.location;
+        // let [rawy, rawx] = locationParam.split(":");
+        // y = parseInt(rawy, 10), x = parseInt(rawx, 10);
         // switch (url.searchParams.get("op")) {
-        const down = "down";
-        switch (down) {
-            case "up": {
-                if (y > 1) y -= 1;
-                break;
-            }
-            case "right": {
-                if (x < 3) x += 1;
-                break;
-            }
-            case "down": {
-                if (y < 3) y += 1;
-                break;
-            }
-            case "left": {
-                if (x > 1) x -= 1;
-                break;
-            }
-            default: {
-            }
-        }
-        res.setHeader("Set-Cookie", `location=${y}:${x}; ${env === 'development' ? "" : "SameSite=None; Secure; "}HttpOnly; Path=/; ${partitioned && env === "production" ? "Partitioned;" : ""}`);
+        //     case "up": {
+        //         if (y > 1) y -= 1;
+        //         break;
+        //     }
+        //     case "right": {
+        //         if (x < 3) x += 1;
+        //         break;
+        //     }
+        //     case "down": {
+        //         if (y < 3) y += 1;
+        //         break;
+        //     }
+        //     case "left": {
+        //         if (x > 1) x -= 1;
+        //         break;
+        //     }
+        //     default: {
+        //     }
+        // }
+        // res.setHeader("Set-Cookie", `location=${y}:${x}; ${env === 'development' ? "" : "SameSite=None; Secure; "}HttpOnly; Path=/; ${partitioned && env === "production" ? "Partitioned;" : ""}`);
     }
-    return { props: { x, y } }
+    return { props: { x, y, headers: JSON.stringify(req.headers), url: req.url } }
 }
 
-export default function Home({ x, y }) {
+export default function Home({ x, y, headers, url }) {
     console.log(x, y)
     return (
         <>
@@ -89,6 +86,8 @@ export default function Home({ x, y }) {
             <main className={styles.main}>
                 <div>
                     <h1>Simple Map App</h1>
+                    <div>{url}</div>
+                    <div>{headers}</div>
                     <form method="GET" action="/">
                         <button name="op" type="submit" value="up">↑</button>
                         <button name="op" type="submit" value="left">←</button>
