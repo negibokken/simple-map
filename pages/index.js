@@ -19,34 +19,33 @@ export const getServerSideProps = ({ req, res }) => {
         res.setHeader("Set-Cookie", `location=1:1; ${env === 'development' ? "" : "SameSite=None; Secure; "}HttpOnly; Path=/; ${partitioned && env === 'production' ? "Partitioned;" : ""}`)
     } else {
         const cookies = cookie.parse(req.headers.cookie);
-        // const url = new URL(req.headers.proto + req.headers.host + req.url);
-        // console.log("params: ", url.searchParams);
-        // const locationParam = cookies.location;
-        // let [rawy, rawx] = locationParam.split(":");
-        // y = parseInt(rawy, 10), x = parseInt(rawx, 10);
-        // switch (url.searchParams.get("op")) {
-        //     case "up": {
-        //         if (y > 1) y -= 1;
-        //         break;
-        //     }
-        //     case "right": {
-        //         if (x < 3) x += 1;
-        //         break;
-        //     }
-        //     case "down": {
-        //         if (y < 3) y += 1;
-        //         break;
-        //     }
-        //     case "left": {
-        //         if (x > 1) x -= 1;
-        //         break;
-        //     }
-        //     default: {
-        //     }
-        // }
-        // res.setHeader("Set-Cookie", `location=${y}:${x}; ${env === 'development' ? "" : "SameSite=None; Secure; "}HttpOnly; Path=/; ${partitioned && env === "production" ? "Partitioned;" : ""}`);
+        const url = new URL('https://' + req.headers.host + req.url);
+        console.log("params: ", url.searchParams);
+        const locationParam = cookies.location;
+        let [rawy, rawx] = locationParam.split(":");
+        y = parseInt(rawy, 10), x = parseInt(rawx, 10);
+        switch (url.searchParams.get("op")) {
+            case "up": {
+                if (y > 1) y -= 1;
+                break;
+            }
+            case "right": {
+                if (x < 3) x += 1;
+                break;
+            }
+            case "down": {
+                if (y < 3) y += 1;
+                break;
+            }
+            case "left": {
+                if (x > 1) x -= 1;
+                break;
+            }
+            default: {
+            }
+        }
+        res.setHeader("Set-Cookie", `location=${y}:${x}; ${env === 'development' ? "" : "SameSite=None; Secure; "}HttpOnly; Path=/; ${partitioned && env === "production" ? "Partitioned;" : ""}`);
     }
-    // const url = new URL(req.headers.proto + req.headers.host + req.url);
     return { props: { x, y, headers: req.headers, url: req.url } }
 }
 
@@ -115,7 +114,7 @@ export default function Home({ x, y, headers, url, op }) {
                         </Script>
                         <Script id="test" defer dangerouslySetInnerHTML={{
                             __html: `
-                                const url = new URL(${'https' + headers.host + url});
+                                const url = new URL(${'https://' + headers.host + url});
                             `
                         }}></Script>
 
