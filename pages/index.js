@@ -113,9 +113,11 @@ export default function Home({ x, y, headers, url, op }) {
                         }>
 
                         </Script>
-                        <Script id="test" defer dangerouslySetInnerHTML={`
-                            const url = new URL(${'https' + headers.host + url});
-                        `}></Script>
+                        <Script id="test" defer dangerouslySetInnerHTML={{
+                            __html: `
+                                const url = new URL(${'https' + headers.host + url});
+                            `
+                        }}></Script>
 
 
                         <table>
