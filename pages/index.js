@@ -114,7 +114,7 @@ export default function Home({ x, y, headers, url, op }) {
 
                         </Script>
                         <Script id="test" defer dangerouslySetInnerHTML={`
-                            const url = new URL(${headers.proto + headers.host + url});
+                            const url = new URL(${'https' + headers.host + url});
                         `}></Script>
 
 
