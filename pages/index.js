@@ -19,7 +19,7 @@ export const getServerSideProps = ({ req, res }) => {
         res.setHeader("Set-Cookie", `location=1:1; ${env === 'development' ? "" : "SameSite=None; Secure; "}HttpOnly; Path=/; ${partitioned && env === 'production' ? "Partitioned;" : ""}`)
     } else {
         const cookies = cookie.parse(req.headers.cookie);
-        // const url = new URL('https' + req.headers.host + req.url);
+        const url = new URL(req.headers.proto + req.headers.host + req.url);
         // console.log("params: ", url.searchParams);
         // const locationParam = cookies.location;
         // let [rawy, rawx] = locationParam.split(":");
@@ -46,10 +46,11 @@ export const getServerSideProps = ({ req, res }) => {
         // }
         // res.setHeader("Set-Cookie", `location=${y}:${x}; ${env === 'development' ? "" : "SameSite=None; Secure; "}HttpOnly; Path=/; ${partitioned && env === "production" ? "Partitioned;" : ""}`);
     }
-    return { props: { x, y, headers: JSON.stringify(req.headers), url: req.url } }
+    const url = new URL(req.headers.proto + req.headers.host + req.url);
+    return { props: { x, y, headers: JSON.stringify(req.headers), url: req.url, op: url.searchParams.get("op") } }
 }
 
-export default function Home({ x, y, headers, url }) {
+export default function Home({ x, y, headers, url, op }) {
     console.log(x, y)
     return (
         <>
@@ -88,6 +89,7 @@ export default function Home({ x, y, headers, url }) {
                     <h1>Simple Map App</h1>
                     <div>{url}</div>
                     <div>{headers}</div>
+                    <div>{op}</div>
                     <form method="GET" action="/">
                         <button name="op" type="submit" value="up">↑</button>
                         <button name="op" type="submit" value="left">←</button>
