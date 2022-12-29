@@ -13,18 +13,19 @@ export const getServerSideProps = ({ req, res }) => {
     console.log("env", env);
     console.log("req.url", req.url);
     console.log("req.url", req.headers.host);
-    const partitioned = true;
+    const searchParams = new URLSearchParams(req.url.slice(1));
+    const partitioned = !searchParams.has("nopartitioned");
+    console.log("partitioned: ", partitioned)
     let y = 1, x = 1;
     if (!req.headers.cookie) {
         res.setHeader("Set-Cookie", `location=1:1; ${env === 'development' ? "" : "SameSite=None; Secure; "}HttpOnly; Path=/; ${partitioned && env === 'production' ? "Partitioned;" : ""}`)
     } else {
         const cookies = cookie.parse(req.headers.cookie);
-        const url = new URL('https://' + req.headers.host + req.url);
-        console.log("params: ", url.searchParams);
+        console.log("params: ", searchParams);
         const locationParam = cookies.location;
         let [rawy, rawx] = locationParam.split(":");
         y = parseInt(rawy, 10), x = parseInt(rawx, 10);
-        switch (url.searchParams.get("op")) {
+        switch (searchParams.get("op")) {
             case "up": {
                 if (y > 1) y -= 1;
                 break;
@@ -46,11 +47,11 @@ export const getServerSideProps = ({ req, res }) => {
         }
         res.setHeader("Set-Cookie", `location=${y}:${x}; ${env === 'development' ? "" : "SameSite=None; Secure; "}HttpOnly; Path=/; ${partitioned && env === "production" ? "Partitioned;" : ""}`);
     }
-    return { props: { x, y } }
+    return { props: { x, y, query: searchParams.toString() } }
 }
 
-export default function Home({ x, y }) {
-    console.log(x, y)
+export default function Home({ x, y, query }) {
+    console.log(">>>", query)
     return (
         <>
             <Head>
@@ -73,7 +74,7 @@ export default function Home({ x, y }) {
                         width: 30px;
                         height: 25px;
                     }
-                                    th {
+                    th {
                         background: #f0e6cc;
                     }
                                     button {
@@ -87,6 +88,10 @@ export default function Home({ x, y }) {
                 <div>
                     <h1>Simple Map App</h1>
                     <form method="GET" action="/">
+                        {query.split("&").map((query, idx) => {
+                            const [name, value] = query.split("=");
+                            return name === "op" ? null : <input key={idx} type="hidden" name={name} value={value} />
+                        })}
                         <button name="op" type="submit" value="up">↑</button>
                         <button name="op" type="submit" value="left">←</button>
                         <button name="op" type="submit" value="right">→</button>
