@@ -10,6 +10,8 @@ const inter = Inter({ subsets: ['latin'] })
 const env = process.env.NODE_ENV;
 
 export const getServerSideProps = ({ req, res }) => {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+
     console.log("env", env);
     console.log("req.url", req.url);
     console.log("req.url", req.headers.host);
