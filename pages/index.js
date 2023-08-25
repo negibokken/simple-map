@@ -11,6 +11,7 @@ const env = process.env.NODE_ENV;
 
 export const getServerSideProps = ({ req, res }) => {
     res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
 
     console.log("env", env);
     console.log("req.url", req.url);
